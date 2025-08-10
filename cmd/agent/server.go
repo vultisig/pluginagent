@@ -9,7 +9,6 @@ import (
 	"github.com/vultisig/pluginagent/api"
 	"github.com/vultisig/pluginagent/config"
 	"github.com/vultisig/pluginagent/storage"
-	"github.com/vultisig/pluginagent/storage/postgres"
 	"github.com/vultisig/verifier/vault"
 )
 
@@ -52,7 +51,10 @@ func main() {
 		panic(err)
 	}
 
-	db, err := postgres.NewPostgresBackend(cfg.Database.DSN, nil)
+	db, err := storage.NewDatabaseStorage(storage.StorageConfig{
+		Type: storage.StorageTypePostgreSQL,
+		DSN:  cfg.Database.DSN,
+	})
 	if err != nil {
 		logger.Fatalf("Failed to connect to database: %v", err)
 	}

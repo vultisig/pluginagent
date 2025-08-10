@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"github.com/vultisig/pluginagent/storage"
+	"github.com/vultisig/pluginagent/storage/interfaces"
 	"github.com/vultisig/verifier/types"
 )
 
@@ -26,12 +26,12 @@ type Service interface {
 }
 
 type Policy struct {
-	repo   storage.DatabaseStorage
+	repo   interfaces.DatabaseStorage
 	logger *logrus.Logger
 }
 
 func NewPolicyService(
-	repo storage.DatabaseStorage,
+	repo interfaces.DatabaseStorage,
 	logger *logrus.Logger,
 ) (*Policy, error) {
 	return &Policy{

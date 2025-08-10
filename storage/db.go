@@ -1,18 +1,33 @@
 package storage
 
 import (
-	"context"
+	"fmt"
 
-	"github.com/google/uuid"
-	vtypes "github.com/vultisig/verifier/types"
+	"github.com/vultisig/pluginagent/storage/interfaces"
+	"github.com/vultisig/pluginagent/storage/postgres"
 )
 
-type DatabaseStorage interface {
-	Close() error
+type StorageType string
 
-	GetPluginPolicy(ctx context.Context, id uuid.UUID) (*vtypes.PluginPolicy, error)
-	GetAllPluginPolicies(ctx context.Context, publicKey string, pluginID vtypes.PluginID, onlyActive bool) ([]vtypes.PluginPolicy, error)
-	DeletePluginPolicy(ctx context.Context, id uuid.UUID) error
-	InsertPluginPolicy(ctx context.Context, policy vtypes.PluginPolicy) (*vtypes.PluginPolicy, error)
-	UpdatePluginPolicy(ctx context.Context, policy vtypes.PluginPolicy) (*vtypes.PluginPolicy, error)
+const (
+	StorageTypePostgreSQL StorageType = "postgresql"
+	StorageTypeSQLite     StorageType = "sqlite"
+)
+
+type StorageConfig struct {
+	Type StorageType
+	DSN  string
 }
+
+// NewDatabaseStorage creates a new database storage instance based on the config.
+func NewDatabaseStorage(config StorageConfig) (interfaces.DatabaseStorage, error) {
+	switch config.Type {
+	case StorageTypePostgreSQL:
+		return postgres.NewPostgresStorage(config.DSN)
+	case StorageTypeSQLite:
+		return nil, fmt.Errorf("sqlite storage not implemented yet")
+	default:
+		return nil, fmt.Errorf("unsupported storage type: %s", config.Type)
+	}
+}
+

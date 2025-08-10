@@ -18,7 +18,7 @@ import (
 	"github.com/vultisig/pluginagent/config"
 	"github.com/vultisig/pluginagent/policy"
 	"github.com/vultisig/pluginagent/storage"
-	"github.com/vultisig/pluginagent/storage/postgres"
+	"github.com/vultisig/pluginagent/storage/interfaces"
 	vcommon "github.com/vultisig/verifier/common"
 	vv "github.com/vultisig/verifier/common/vultisig_validator"
 	"github.com/vultisig/verifier/plugin/tasks"
@@ -28,7 +28,7 @@ import (
 
 type Server struct {
 	cfg           config.ServerConfig
-	db            storage.DatabaseStorage
+	db            interfaces.DatabaseStorage
 	redis         *storage.RedisStorage
 	vaultStorage  vault.Storage
 	client        *asynq.Client
@@ -42,7 +42,7 @@ type Server struct {
 // NewServer returns a new server.
 func NewServer(
 	cfg config.ServerConfig,
-	db *postgres.PostgresBackend,
+	db interfaces.DatabaseStorage,
 	redis *storage.RedisStorage,
 	vaultStorage vault.Storage,
 	client *asynq.Client,

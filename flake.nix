@@ -78,6 +78,7 @@
                     redis
                     goose
                     hurl
+                    sqlc
                   ];
 
                   enterShell = ''
