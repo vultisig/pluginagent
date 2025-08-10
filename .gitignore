@@ -21,3 +21,5 @@ tmp/
 test/vaults/*
 .air.*.toml
 fee_config.json
+
+worker.json
