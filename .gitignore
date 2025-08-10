@@ -22,4 +22,5 @@ test/vaults/*
 .air.*.toml
 fee_config.json
 
-worker.json
+agent.json
+agent.yaml

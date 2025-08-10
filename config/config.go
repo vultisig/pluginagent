@@ -9,6 +9,19 @@ type Config struct {
 	Redis        RedisConfig               `mapstructure:"redis" json:"redis"`
 	VaultService vault_config.Config       `mapstructure:"vault_service" json:"vault_service,omitempty"`
 	BlockStorage vault_config.BlockStorage `mapstructure:"block_storage" json:"block_storage,omitempty"`
+	Server       ServerConfig              `mapstructure:"server" json:"server,omitempty"`
+	Database     DatabaseConfig            `mapstructure:"database" json:"database,omitempty"`
+}
+
+type DatabaseConfig struct {
+	DSN string `mapstructure:"dsn" json:"dsn,omitempty"`
+}
+
+type ServerConfig struct {
+	Host             string `mapstructure:"host" json:"host,omitempty"`
+	Port             int64  `mapstructure:"port" json:"port,omitempty"`
+	EncryptionSecret string `mapstructure:"encryption_secret" json:"encryption_secret,omitempty"`
+	VaultsFilePath   string `mapstructure:"vaults_file_path" json:"vaults_file_path,omitempty"` //This is just for testing locally
 }
 
 type RedisConfig struct {
@@ -19,10 +32,28 @@ type RedisConfig struct {
 	DB       int    `mapstructure:"db" json:"db"`
 }
 
+func LoadServerConfig() (*Config, error) {
+	cfg := &Config{}
+
+	viper.SetConfigName("agent")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, err
+	}
+
+	if err := viper.Unmarshal(cfg); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}
+
 func LoadWorkerConfig() (*Config, error) {
 	cfg := &Config{}
 
-	viper.SetConfigName("worker")
+	viper.SetConfigName("agent")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 

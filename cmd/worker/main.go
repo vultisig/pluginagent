@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/hibiken/asynq"
 	"github.com/sirupsen/logrus"
@@ -19,7 +20,7 @@ func main() {
 
 	redisCfg := cfg.Redis
 	redisOptions := asynq.RedisClientOpt{
-		Addr:     redisCfg.Host + ":" + redisCfg.Port,
+		Addr:     net.JoinHostPort(redisCfg.Host, redisCfg.Port),
 		Username: redisCfg.User,
 		Password: redisCfg.Password,
 		DB:       redisCfg.DB,
