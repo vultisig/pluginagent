@@ -30,4 +30,3 @@ func NewDatabaseStorage(config StorageConfig) (interfaces.DatabaseStorage, error
 		return nil, fmt.Errorf("unsupported storage type: %s", config.Type)
 	}
 }
-

@@ -17,6 +17,11 @@ import (
 
 var _ interfaces.DatabaseStorage = (*Storage)(nil)
 
+type MigrationOptions struct {
+	RunSystemMigrations bool
+	RunPluginMigrations bool
+}
+
 type Storage struct {
 	pool    *pgxpool.Pool
 	queries *queries.Queries
@@ -88,7 +93,7 @@ func (s *Storage) GetPluginPolicy(ctx context.Context, id uuid.UUID) (*vtypes.Pl
 		}
 		return nil, fmt.Errorf("failed to get policy: %w", err)
 	}
-	
+
 	return toVTypesPluginPolicy(row)
 }
 
@@ -98,12 +103,12 @@ func (s *Storage) GetAllPluginPolicies(ctx context.Context, publicKey string, pl
 		PluginID:  string(pluginID),
 		Column3:   onlyActive,
 	}
-	
+
 	rows, err := s.queries.GetAllPluginPolicies(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get policies: %w", err)
 	}
-	
+
 	policies := make([]vtypes.PluginPolicy, 0, len(rows))
 	for _, row := range rows {
 		policy, err := toVTypesPluginPolicyFromGetAll(row)
@@ -112,7 +117,7 @@ func (s *Storage) GetAllPluginPolicies(ctx context.Context, publicKey string, pl
 		}
 		policies = append(policies, *policy)
 	}
-	
+
 	return policies, nil
 }
 
@@ -127,12 +132,12 @@ func (s *Storage) InsertPluginPolicy(ctx context.Context, policy vtypes.PluginPo
 		Active:        policy.Active,
 		Recipe:        policy.Recipe,
 	}
-	
+
 	row, err := s.queries.InsertPluginPolicy(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to insert policy: %w", err)
 	}
-	
+
 	return toVTypesPluginPolicyFromInsert(row)
 }
 
@@ -145,7 +150,7 @@ func (s *Storage) UpdatePluginPolicy(ctx context.Context, policy vtypes.PluginPo
 		Active:        policy.Active,
 		Recipe:        policy.Recipe,
 	}
-	
+
 	row, err := s.queries.UpdatePluginPolicy(ctx, params)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -153,7 +158,7 @@ func (s *Storage) UpdatePluginPolicy(ctx context.Context, policy vtypes.PluginPo
 		}
 		return nil, fmt.Errorf("failed to update policy: %w", err)
 	}
-	
+
 	return toVTypesPluginPolicyFromUpdate(row)
 }
 
@@ -162,7 +167,7 @@ func (s *Storage) DeletePluginPolicy(ctx context.Context, id uuid.UUID) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete policy: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -171,21 +176,21 @@ func (s *Storage) WithTx(ctx context.Context, fn func(interfaces.DatabaseStorage
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	
+
 	defer func() {
 		if err := tx.Rollback(ctx); err != nil && !errors.Is(err, pgx.ErrTxClosed) {
 			logrus.WithError(err).Error("failed to rollback transaction")
 		}
 	}()
-	
+
 	txStorage := &Storage{
 		pool:    s.pool,
 		queries: s.queries.WithTx(tx),
 	}
-	
+
 	if err := fn(txStorage); err != nil {
 		return err
 	}
-	
+
 	return tx.Commit(ctx)
 }

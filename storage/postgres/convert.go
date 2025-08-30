@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"strconv"
-	
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	vtypes "github.com/vultisig/verifier/types"
@@ -15,12 +15,12 @@ func toVTypesPluginPolicy(row queries.GetPluginPolicyRow) (*vtypes.PluginPolicy,
 	if err != nil {
 		return nil, err
 	}
-	
+
 	policyVersion, err := strconv.Atoi(row.PolicyVersion)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &vtypes.PluginPolicy{
 		ID:            id,
 		PublicKey:     row.PublicKey,
@@ -38,12 +38,12 @@ func toVTypesPluginPolicyFromInsert(row queries.InsertPluginPolicyRow) (*vtypes.
 	if err != nil {
 		return nil, err
 	}
-	
+
 	policyVersion, err := strconv.Atoi(row.PolicyVersion)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &vtypes.PluginPolicy{
 		ID:            id,
 		PublicKey:     row.PublicKey,
@@ -61,12 +61,12 @@ func toVTypesPluginPolicyFromUpdate(row queries.UpdatePluginPolicyRow) (*vtypes.
 	if err != nil {
 		return nil, err
 	}
-	
+
 	policyVersion, err := strconv.Atoi(row.PolicyVersion)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &vtypes.PluginPolicy{
 		ID:            id,
 		PublicKey:     row.PublicKey,
@@ -84,12 +84,12 @@ func toVTypesPluginPolicyFromGetAll(row queries.GetAllPluginPoliciesRow) (*vtype
 	if err != nil {
 		return nil, err
 	}
-	
+
 	policyVersion, err := strconv.Atoi(row.PolicyVersion)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &vtypes.PluginPolicy{
 		ID:            id,
 		PublicKey:     row.PublicKey,
