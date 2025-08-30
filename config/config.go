@@ -11,6 +11,11 @@ type Config struct {
 	BlockStorage vault_config.BlockStorage `mapstructure:"block_storage" json:"block_storage,omitempty"`
 	Server       ServerConfig              `mapstructure:"server" json:"server,omitempty"`
 	Database     DatabaseConfig            `mapstructure:"database" json:"database,omitempty"`
+	Plugin       PluginConfig              `mapstructure:"plugin" json:"plugin,omitempty"`
+}
+
+type PluginConfig struct {
+	PluginID string `mapstructure:"plugin_id" json:"plugin_id,omitempty"`
 }
 
 type DatabaseConfig struct {
