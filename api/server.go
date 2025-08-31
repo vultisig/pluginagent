@@ -38,7 +38,6 @@ type Server struct {
 	sdClient      *statsd.Client
 	policyService service.Policy
 	logger        *logrus.Logger
-	mode          string
 }
 
 // NewServer returns a new server.
