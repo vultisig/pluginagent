@@ -61,6 +61,7 @@ func main() {
 
 	server := api.NewServer(
 		cfg.Server,
+		cfg.Plugin,
 		db,
 		redisStorage,
 		vaultStorage,

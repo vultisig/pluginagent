@@ -29,6 +29,7 @@ import (
 
 type Server struct {
 	cfg           config.ServerConfig
+	pluginCfg     config.PluginConfig
 	db            interfaces.DatabaseStorage
 	redis         *storage.RedisStorage
 	vaultStorage  vault.Storage
@@ -43,6 +44,7 @@ type Server struct {
 // NewServer returns a new server.
 func NewServer(
 	cfg config.ServerConfig,
+	pluginCfg config.PluginConfig,
 	db interfaces.DatabaseStorage,
 	redis *storage.RedisStorage,
 	vaultStorage vault.Storage,
@@ -58,6 +60,7 @@ func NewServer(
 
 	return &Server{
 		cfg:           cfg,
+		pluginCfg:     pluginCfg,
 		redis:         redis,
 		client:        client,
 		inspector:     inspector,

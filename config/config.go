@@ -15,7 +15,8 @@ type Config struct {
 }
 
 type PluginConfig struct {
-	PluginID string `mapstructure:"plugin_id" json:"plugin_id,omitempty"`
+	PluginID                    string `mapstructure:"plugin_id" json:"plugin_id,omitempty"`
+	RecipeSpecificationFilePath string `mapstructure:"recipe_specification_file_path" json:"recipe_specification_file_path,omitempty"`
 }
 
 type DatabaseConfig struct {

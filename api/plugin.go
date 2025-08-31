@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -218,8 +219,13 @@ func (s *Server) GetPolicySchema(c echo.Context) error {
 }
 
 func (s *Server) GetRecipeSpecification(c echo.Context) error {
-	// TODO: generalize recipe specification
-	return c.JSON(http.StatusOK, map[string]interface{}{})
+	// Read recipe specification file
+	jsonData, err := os.ReadFile(s.pluginCfg.RecipeSpecificationFilePath)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, NewErrorResponse("failed to read recipe specification file"))
+	}
+
+	return c.Stream(http.StatusOK, "application/json", bytes.NewReader(jsonData))
 }
 
 func (s *Server) verifyPolicySignature(policy vtypes.PluginPolicy) bool {

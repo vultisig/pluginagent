@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "plugin_id": "nbits-labs-merkle-e93d",
+  "plugin_name": "Merkl Rewards",
+  "plugin_version": 1,
+  "supported_resources": [
+    {
+      "resource_path": {
+        "chain_id": "ethereum",
+        "protocol_id": "angle_merkl_distributor",
+        "function_id": "claim",
+        "full": "ethereum.angle_merkl_distributor.claim"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "users",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "tokens",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "amounts",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "proofs",
+          "supported_types": 1,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    }
+  ],
+  "requirements": {
+    "min_vultisig_version": 1,
+    "supported_chains": [
+      "Ethereum"
+    ]
+  },
+  "configuration": {
+    "properties": {
+      "minimum_value": {
+        "format": "number",
+        "type": "string"
+      }
+    },
+    "required": [
+      "minimum_value"
+    ],
+    "type": "object"
+  }
+}
