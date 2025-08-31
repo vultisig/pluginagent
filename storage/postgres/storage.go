@@ -204,9 +204,14 @@ func (s *Storage) InsertEvent(ctx context.Context, event *types.SystemEvent) (in
 		return 0, fmt.Errorf("failed to marshal event data: %w", err)
 	}
 
+	var policyID pgtype.UUID
+	if event.PolicyID != nil {
+		policyID = uuidToPgUUID(*event.PolicyID)
+	}
+
 	params := queries.InsertEventParams{
 		PublicKey: pgtype.Text{String: *event.PublicKey, Valid: event.PublicKey != nil},
-		PolicyID:  uuidToPgUUID(*event.PolicyID),
+		PolicyID:  policyID,
 		EventType: event.EventType,
 		EventData: jsonData,
 	}
