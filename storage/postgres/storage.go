@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -199,11 +198,6 @@ func (s *Storage) WithTx(ctx context.Context, fn func(interfaces.DatabaseStorage
 }
 
 func (s *Storage) InsertEvent(ctx context.Context, event *types.SystemEvent) (int64, error) {
-	jsonData, err := json.Marshal(event.EventData)
-	if err != nil {
-		return 0, fmt.Errorf("failed to marshal event data: %w", err)
-	}
-
 	var policyID pgtype.UUID
 	if event.PolicyID != nil {
 		policyID = uuidToPgUUID(*event.PolicyID)
@@ -213,7 +207,7 @@ func (s *Storage) InsertEvent(ctx context.Context, event *types.SystemEvent) (in
 		PublicKey: pgtype.Text{String: *event.PublicKey, Valid: event.PublicKey != nil},
 		PolicyID:  policyID,
 		EventType: event.EventType,
-		EventData: jsonData,
+		EventData: event.EventData,
 	}
 
 	return s.queries.InsertEvent(ctx, params)
