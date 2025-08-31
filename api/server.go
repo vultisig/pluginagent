@@ -9,7 +9,6 @@ import (
 
 	"github.com/DataDog/datadog-go/statsd"
 	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
 	"github.com/hibiken/asynq"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -272,7 +271,7 @@ func (s *Server) DeleteVault(c echo.Context) error {
 	// Record vault deletion event
 	event := &types.SystemEvent{
 		PublicKey: &publicKeyECDSA,
-		PolicyID:  &uuid.Nil,
+		PolicyID:  nil,
 		EventType: types.SystemEventTypeVaultDeleted,
 		EventData: nil,
 	}
