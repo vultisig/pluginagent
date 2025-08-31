@@ -19,3 +19,12 @@ type PluginPolicy struct {
 	Recipe        string
 	Deleted       bool
 }
+
+type SystemEvent struct {
+	ID        int64
+	PublicKey pgtype.Text
+	PolicyID  pgtype.Text
+	EventType interface{}
+	EventData []byte
+	CreatedAt pgtype.Timestamp
+}

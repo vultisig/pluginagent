@@ -1,0 +1,8 @@
+-- name: InsertEvent :one
+INSERT INTO system_events (
+    public_key,
+    policy_id,
+    event_type,
+    event_data
+) VALUES ($1, $2, $3, $4)
+RETURNING id;
