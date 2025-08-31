@@ -23,7 +23,7 @@ type PluginPolicy struct {
 type SystemEvent struct {
 	ID        int64
 	PublicKey pgtype.Text
-	PolicyID  pgtype.Text
+	PolicyID  pgtype.UUID
 	EventType interface{}
 	EventData []byte
 	CreatedAt pgtype.Timestamp

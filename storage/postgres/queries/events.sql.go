@@ -23,7 +23,7 @@ RETURNING id
 
 type InsertEventParams struct {
 	PublicKey pgtype.Text
-	PolicyID  pgtype.Text
+	PolicyID  pgtype.UUID
 	EventType interface{}
 	EventData []byte
 }

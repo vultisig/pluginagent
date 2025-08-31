@@ -5,7 +5,7 @@ CREATE TYPE system_event_type AS ENUM ('vault_reshared');
 CREATE TABLE IF NOT EXISTS system_events (
     id BIGSERIAL PRIMARY KEY,
     public_key TEXT,
-    policy_id TEXT,
+    policy_id UUID,
     event_type system_event_type NOT NULL,
     event_data JSONB NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP

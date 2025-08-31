@@ -2,17 +2,20 @@ package postgres
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 	vtypes "github.com/vultisig/verifier/types"
 
 	"github.com/vultisig/pluginagent/storage/interfaces"
 	"github.com/vultisig/pluginagent/storage/postgres/queries"
+	"github.com/vultisig/pluginagent/types"
 )
 
 var _ interfaces.DatabaseStorage = (*Storage)(nil)
@@ -193,4 +196,20 @@ func (s *Storage) WithTx(ctx context.Context, fn func(interfaces.DatabaseStorage
 	}
 
 	return tx.Commit(ctx)
+}
+
+func (s *Storage) InsertEvent(ctx context.Context, event *types.SystemEvent) (int64, error) {
+	jsonData, err := json.Marshal(event.EventData)
+	if err != nil {
+		return 0, fmt.Errorf("failed to marshal event data: %w", err)
+	}
+
+	params := queries.InsertEventParams{
+		PublicKey: pgtype.Text{String: *event.PublicKey, Valid: event.PublicKey != nil},
+		PolicyID:  uuidToPgUUID(*event.PolicyID),
+		EventType: event.EventType,
+		EventData: jsonData,
+	}
+
+	return s.queries.InsertEvent(ctx, params)
 }

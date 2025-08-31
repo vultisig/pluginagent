@@ -8,6 +8,7 @@ import (
 	vtypes "github.com/vultisig/verifier/types"
 
 	"github.com/vultisig/pluginagent/storage/postgres/queries"
+	"github.com/vultisig/pluginagent/types"
 )
 
 func toVTypesPluginPolicy(row queries.GetPluginPolicyRow) (*vtypes.PluginPolicy, error) {
@@ -99,6 +100,31 @@ func toVTypesPluginPolicyFromGetAll(row queries.GetAllPluginPoliciesRow) (*vtype
 		Signature:     row.Signature,
 		Active:        row.Active,
 		Recipe:        row.Recipe,
+	}, nil
+}
+
+func toTypesSystemEvent(row queries.SystemEvent) (*types.SystemEvent, error) {
+	var policyID *uuid.UUID
+	if row.PolicyID.Valid {
+		policyIDParsed, err := uuidFromPgUUID(row.PolicyID)
+		if err != nil {
+			return nil, err
+		}
+		policyID = &policyIDParsed
+	}
+
+	var publicKey *string
+	if row.PublicKey.Valid {
+		publicKey = &row.PublicKey.String
+	}
+
+	return &types.SystemEvent{
+		ID:        row.ID,
+		PublicKey: publicKey,
+		PolicyID:  policyID,
+		EventType: types.SystemEventType(row.EventType.(string)),
+		EventData: row.EventData,
+		CreatedAt: row.CreatedAt.Time,
 	}, nil
 }
 

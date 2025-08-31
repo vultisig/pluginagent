@@ -263,6 +263,7 @@ func (s *Server) DeleteVault(c echo.Context) error {
 	if err := s.vaultStorage.DeleteFile(fileName); err != nil {
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}
+
 	return c.NoContent(http.StatusOK)
 }
 
