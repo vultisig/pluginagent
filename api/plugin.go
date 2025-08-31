@@ -16,6 +16,7 @@ import (
 	v1 "github.com/vultisig/commondata/go/vultisig/vault/v1"
 	"github.com/vultisig/mobile-tss-lib/tss"
 	"github.com/vultisig/pluginagent/common"
+	"github.com/vultisig/pluginagent/types"
 	vcommon "github.com/vultisig/verifier/common"
 	vtypes "github.com/vultisig/verifier/types"
 )
@@ -83,14 +84,6 @@ func (s *Server) CreatePluginPolicy(c echo.Context) error {
 		return fmt.Errorf("fail to parse request, err: %w", err)
 	}
 
-	// We re-init plugin as verification server doesn't have plugin defined
-
-	// TODO: validate plugin policy
-	// if err := s.plugin.ValidatePluginPolicy(policy); err != nil {
-	// 	s.logger.WithError(err).Error("failed to validate plugin policy")
-	// 	return c.JSON(http.StatusBadRequest, NewErrorResponse("failed to validate policy"))
-	// }
-
 	if policy.ID.String() == "" {
 		policy.ID = uuid.New()
 	}
@@ -104,6 +97,23 @@ func (s *Server) CreatePluginPolicy(c echo.Context) error {
 	if err != nil {
 		s.logger.WithError(err).Error("Failed to create plugin policy")
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse("failed to create policy"))
+	}
+
+	// Record plugin policy creation event
+	jsonPolicy, err := json.Marshal(policy)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+	}
+
+	event := &types.SystemEvent{
+		PublicKey: &policy.PublicKey,
+		PolicyID:  &policy.ID,
+		EventType: types.SystemEventTypePluginPolicyCreated,
+		EventData: jsonPolicy,
+	}
+	_, err = s.db.InsertEvent(c.Request().Context(), event)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}
 
 	return c.JSON(http.StatusOK, newPolicy)
