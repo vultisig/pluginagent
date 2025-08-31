@@ -20,11 +20,12 @@ import (
 	"github.com/vultisig/pluginagent/storage"
 	"github.com/vultisig/pluginagent/storage/interfaces"
 	"github.com/vultisig/pluginagent/types"
-	vcommon "github.com/vultisig/verifier/common"
 	vv "github.com/vultisig/verifier/common/vultisig_validator"
 	"github.com/vultisig/verifier/plugin/tasks"
 	vtypes "github.com/vultisig/verifier/types"
 	"github.com/vultisig/verifier/vault"
+	vgcommon "github.com/vultisig/vultisig-go/common"
+	vgtypes "github.com/vultisig/vultisig-go/types"
 )
 
 type Server struct {
@@ -169,7 +170,7 @@ func (s *Server) GetVault(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewErrorResponse("pluginId is required"))
 	}
 
-	filePathName := vcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
+	filePathName := vgcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
 	content, err := s.vaultStorage.GetVault(filePathName)
 	if err != nil {
 		wrappedErr := fmt.Errorf("fail to read file in GetVault, err: %w", err)
@@ -177,13 +178,13 @@ func (s *Server) GetVault(c echo.Context) error {
 		return wrappedErr
 	}
 
-	v, err := vcommon.DecryptVaultFromBackup(s.cfg.EncryptionSecret, content)
+	v, err := vgcommon.DecryptVaultFromBackup(s.cfg.EncryptionSecret, content)
 	if err != nil {
 		s.logger.WithError(err).Error("fail to decrypt vault")
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse("fail to get vault"))
 	}
 
-	return c.JSON(http.StatusOK, vtypes.VaultGetResponse{
+	return c.JSON(http.StatusOK, vgtypes.VaultGetResponse{
 		Name:           v.Name,
 		PublicKeyEcdsa: v.PublicKeyEcdsa,
 		PublicKeyEddsa: v.PublicKeyEddsa,
@@ -214,7 +215,7 @@ func (s *Server) SignMessages(c echo.Context) error {
 		s.logger.Errorf("fail to set session, err: %v", err)
 	}
 
-	filePathName := vcommon.GetVaultBackupFilename(req.PublicKey, req.PluginID)
+	filePathName := vgcommon.GetVaultBackupFilename(req.PublicKey, req.PluginID)
 	content, err := s.vaultStorage.GetVault(filePathName)
 	if err != nil {
 		wrappedErr := fmt.Errorf("fail to read file in SignMessages, err: %w", err)
@@ -223,7 +224,7 @@ func (s *Server) SignMessages(c echo.Context) error {
 		return wrappedErr
 	}
 
-	_, err = vcommon.DecryptVaultFromBackup(s.cfg.EncryptionSecret, content)
+	_, err = vgcommon.DecryptVaultFromBackup(s.cfg.EncryptionSecret, content)
 	if err != nil {
 		return fmt.Errorf("fail to decrypt vault from the backup, err: %w", err)
 	}
@@ -279,7 +280,7 @@ func (s *Server) DeleteVault(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewErrorResponse("pluginId is required"))
 	}
 
-	fileName := vcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
+	fileName := vgcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
 	if err := s.vaultStorage.DeleteFile(fileName); err != nil {
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}
@@ -320,7 +321,7 @@ func (s *Server) ExistVault(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, NewErrorResponse("plugin id is required"))
 	}
 
-	filePathName := vcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
+	filePathName := vgcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
 	exist, err := s.vaultStorage.Exist(filePathName)
 	if err != nil || !exist {
 		return c.NoContent(http.StatusBadRequest)

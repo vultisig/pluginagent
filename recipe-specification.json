@@ -14,7 +14,7 @@
       "parameter_capabilities": [
         {
           "parameter_name": "users",
-          "supported_types": 1,
+          "supported_types": 5,
           "required": true
         },
         {
@@ -24,12 +24,12 @@
         },
         {
           "parameter_name": "amounts",
-          "supported_types": 1,
+          "supported_types": 5,
           "required": true
         },
         {
           "parameter_name": "proofs",
-          "supported_types": 1,
+          "supported_types": 5,
           "required": true
         }
       ],
@@ -45,13 +45,13 @@
   },
   "configuration": {
     "properties": {
-      "minimum_value": {
+      "minimumValue": {
         "format": "number",
         "type": "string"
       }
     },
     "required": [
-      "minimum_value"
+      "minimumValue"
     ],
     "type": "object"
   }
