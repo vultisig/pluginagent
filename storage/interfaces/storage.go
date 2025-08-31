@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/vultisig/pluginagent/types"
 	vtypes "github.com/vultisig/verifier/types"
 )
 
@@ -16,6 +17,8 @@ type DatabaseStorage interface {
 	DeletePluginPolicy(ctx context.Context, id uuid.UUID) error
 	InsertPluginPolicy(ctx context.Context, policy vtypes.PluginPolicy) (*vtypes.PluginPolicy, error)
 	UpdatePluginPolicy(ctx context.Context, policy vtypes.PluginPolicy) (*vtypes.PluginPolicy, error)
+
+	InsertEvent(ctx context.Context, event *types.SystemEvent) (int64, error)
 
 	// Transaction support
 	WithTx(ctx context.Context, fn func(DatabaseStorage) error) error

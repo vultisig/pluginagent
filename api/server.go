@@ -9,6 +9,7 @@ import (
 
 	"github.com/DataDog/datadog-go/statsd"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"github.com/hibiken/asynq"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -19,6 +20,7 @@ import (
 	"github.com/vultisig/pluginagent/policy"
 	"github.com/vultisig/pluginagent/storage"
 	"github.com/vultisig/pluginagent/storage/interfaces"
+	"github.com/vultisig/pluginagent/types"
 	vcommon "github.com/vultisig/verifier/common"
 	vv "github.com/vultisig/verifier/common/vultisig_validator"
 	"github.com/vultisig/verifier/plugin/tasks"
@@ -248,19 +250,34 @@ func (s *Server) GetKeysignResult(c echo.Context) error {
 }
 func (s *Server) DeleteVault(c echo.Context) error {
 	publicKeyECDSA := c.Param("publicKeyECDSA")
+	pluginId := c.Param("pluginId")
+
 	if publicKeyECDSA == "" {
 		return c.JSON(http.StatusBadRequest, NewErrorResponse("public key is required"))
 	}
+
 	if !s.isValidHash(publicKeyECDSA) {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	pluginId := c.Param("pluginId")
+
 	if pluginId == "" {
 		return c.JSON(http.StatusBadRequest, NewErrorResponse("pluginId is required"))
 	}
 
 	fileName := vcommon.GetVaultBackupFilename(publicKeyECDSA, pluginId)
 	if err := s.vaultStorage.DeleteFile(fileName); err != nil {
+		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+	}
+
+	// Record vault deletion event
+	event := &types.SystemEvent{
+		PublicKey: &publicKeyECDSA,
+		PolicyID:  &uuid.Nil,
+		EventType: types.SystemEventTypeVaultDeleted,
+		EventData: nil,
+	}
+	_, err := s.db.InsertEvent(c.Request().Context(), event)
+	if err != nil {
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}
 
