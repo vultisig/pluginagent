@@ -141,19 +141,6 @@ func (s *Server) ReshareVault(c echo.Context) error {
 		return fmt.Errorf("fail to enqueue task, err: %w", err)
 	}
 
-	// Record vault resharing event
-	// TODO: move this to post-reshare
-	event := &types.SystemEvent{
-		PublicKey: &req.PublicKey,
-		PolicyID:  nil,
-		EventType: types.SystemEventTypeVaultReshared,
-		EventData: buf,
-	}
-	_, err = s.db.InsertEvent(c.Request().Context(), event)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-	}
-
 	return c.NoContent(http.StatusOK)
 }
 
@@ -290,7 +277,7 @@ func (s *Server) DeleteVault(c echo.Context) error {
 		PublicKey: &publicKeyECDSA,
 		PolicyID:  nil,
 		EventType: types.SystemEventTypeVaultDeleted,
-		EventData: nil,
+		EventData: []byte(`{}`),
 	}
 	_, err := s.db.InsertEvent(c.Request().Context(), event)
 	if err != nil {
