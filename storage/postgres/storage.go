@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -206,9 +207,27 @@ func (s *Storage) InsertEvent(ctx context.Context, event *types.SystemEvent) (in
 	params := queries.InsertEventParams{
 		PublicKey: pgtype.Text{String: *event.PublicKey, Valid: event.PublicKey != nil},
 		PolicyID:  policyID,
-		EventType: event.EventType,
+		EventType: queries.SystemEventType(event.EventType),
 		EventData: event.EventData,
 	}
 
 	return s.queries.InsertEvent(ctx, params)
+}
+
+func (s *Storage) GetEventsAfterTimestamp(ctx context.Context, createdAt time.Time) ([]types.SystemEvent, error) {
+	rows, err := s.queries.GetEventsAfterTimestamp(ctx, pgtype.Timestamp{Time: createdAt, Valid: true})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get events: %w", err)
+	}
+
+	events := make([]types.SystemEvent, 0, len(rows))
+	for _, row := range rows {
+		event, err := toTypesSystemEvent(row)
+		if err != nil {
+			return nil, err
+		}
+		events = append(events, *event)
+	}
+
+	return events, nil
 }

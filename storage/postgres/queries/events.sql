@@ -6,3 +6,6 @@ INSERT INTO system_events (
     event_data
 ) VALUES ($1, $2, $3, $4)
 RETURNING id;
+
+-- name: GetEventsAfterTimestamp :many
+SELECT * FROM system_events WHERE created_at >= $1;

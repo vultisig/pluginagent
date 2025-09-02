@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/vultisig/pluginagent/types"
@@ -19,6 +20,7 @@ type DatabaseStorage interface {
 	UpdatePluginPolicy(ctx context.Context, policy vtypes.PluginPolicy) (*vtypes.PluginPolicy, error)
 
 	InsertEvent(ctx context.Context, event *types.SystemEvent) (int64, error)
+	GetEventsAfterTimestamp(ctx context.Context, createdAt time.Time) ([]types.SystemEvent, error)
 
 	// Transaction support
 	WithTx(ctx context.Context, fn func(DatabaseStorage) error) error

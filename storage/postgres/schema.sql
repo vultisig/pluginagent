@@ -1,3 +1,5 @@
+CREATE TYPE system_event_type AS ENUM ('vault_reshared', 'vault_deleted', 'policy_created', 'policy_deleted');
+
 CREATE TABLE IF NOT EXISTS plugin_policies (
     id UUID PRIMARY KEY,
     public_key TEXT NOT NULL,

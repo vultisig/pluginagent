@@ -11,6 +11,37 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const getEventsAfterTimestamp = `-- name: GetEventsAfterTimestamp :many
+SELECT id, public_key, policy_id, event_type, event_data, created_at FROM system_events WHERE created_at >= $1
+`
+
+func (q *Queries) GetEventsAfterTimestamp(ctx context.Context, createdAt pgtype.Timestamp) ([]SystemEvent, error) {
+	rows, err := q.db.Query(ctx, getEventsAfterTimestamp, createdAt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SystemEvent
+	for rows.Next() {
+		var i SystemEvent
+		if err := rows.Scan(
+			&i.ID,
+			&i.PublicKey,
+			&i.PolicyID,
+			&i.EventType,
+			&i.EventData,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const insertEvent = `-- name: InsertEvent :one
 INSERT INTO system_events (
     public_key,
@@ -24,7 +55,7 @@ RETURNING id
 type InsertEventParams struct {
 	PublicKey pgtype.Text
 	PolicyID  pgtype.UUID
-	EventType interface{}
+	EventType SystemEventType
 	EventData []byte
 }
 

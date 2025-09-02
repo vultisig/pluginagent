@@ -122,7 +122,7 @@ func toTypesSystemEvent(row queries.SystemEvent) (*types.SystemEvent, error) {
 		ID:        row.ID,
 		PublicKey: publicKey,
 		PolicyID:  policyID,
-		EventType: types.SystemEventType(row.EventType.(string)),
+		EventType: types.SystemEventType(row.EventType),
 		EventData: row.EventData,
 		CreatedAt: row.CreatedAt.Time,
 	}, nil

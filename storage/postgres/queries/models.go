@@ -5,8 +5,55 @@
 package queries
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type SystemEventType string
+
+const (
+	SystemEventTypeVaultReshared SystemEventType = "vault_reshared"
+	SystemEventTypeVaultDeleted  SystemEventType = "vault_deleted"
+	SystemEventTypePolicyCreated SystemEventType = "policy_created"
+	SystemEventTypePolicyDeleted SystemEventType = "policy_deleted"
+)
+
+func (e *SystemEventType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = SystemEventType(s)
+	case string:
+		*e = SystemEventType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for SystemEventType: %T", src)
+	}
+	return nil
+}
+
+type NullSystemEventType struct {
+	SystemEventType SystemEventType
+	Valid           bool // Valid is true if SystemEventType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullSystemEventType) Scan(value interface{}) error {
+	if value == nil {
+		ns.SystemEventType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.SystemEventType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullSystemEventType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.SystemEventType), nil
+}
 
 type PluginPolicy struct {
 	ID            pgtype.UUID
@@ -24,7 +71,7 @@ type SystemEvent struct {
 	ID        int64
 	PublicKey pgtype.Text
 	PolicyID  pgtype.UUID
-	EventType interface{}
+	EventType SystemEventType
 	EventData []byte
 	CreatedAt pgtype.Timestamp
 }
