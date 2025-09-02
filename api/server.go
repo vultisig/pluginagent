@@ -87,6 +87,7 @@ func (s *Server) StartServer() error {
 	e.Validator = &vv.VultisigValidator{Validator: validator.New()}
 
 	e.GET("/ping", s.Ping)
+	e.GET("/events", s.GetEvents)
 
 	grp := e.Group("/vault")
 	grp.POST("/reshare", s.ReshareVault)

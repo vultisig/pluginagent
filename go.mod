@@ -8,6 +8,7 @@ require (
 	github.com/ethereum/go-ethereum v1.15.11
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/websocket v1.5.0
 	github.com/hibiken/asynq v0.25.1
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/labstack/echo/v4 v4.13.3
@@ -21,6 +22,7 @@ require (
 	github.com/vultisig/plugin v0.0.0-20250806113642-60df06aa239f
 	github.com/vultisig/verifier v0.0.0-20250830094132-4eadb883b2eb
 	github.com/vultisig/vultiserver v0.0.0-20250825042420-c6e6ac281110
+	github.com/vultisig/vultisig-go v0.0.0-20250826134334-ddbbadd76c86
 )
 
 require (
@@ -57,7 +59,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/gogo/protobuf v1.3.3 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/holiman/uint256 v1.3.2 // indirect
@@ -93,7 +94,6 @@ require (
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/vultisig/go-wrappers v0.0.0-20250716071337-34a5c0f4d6e0 // indirect
 	github.com/vultisig/recipes v0.0.0-20250831202228-f315dc13a647 // indirect
-	github.com/vultisig/vultisig-go v0.0.0-20250826134334-ddbbadd76c86 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
