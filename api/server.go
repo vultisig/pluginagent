@@ -88,6 +88,7 @@ func (s *Server) StartServer() error {
 
 	e.GET("/ping", s.Ping)
 	e.GET("/events", s.GetEvents)
+	e.GET("/address/derive", s.DeriveAddress)
 
 	grp := e.Group("/vault")
 	grp.POST("/reshare", s.ReshareVault)
