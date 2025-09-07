@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"sync"
@@ -31,10 +32,12 @@ type EventMessage struct {
 }
 
 type ClientConnection struct {
-	ws            *websocket.Conn
-	subscriptions map[string]bool
-	mutex         sync.RWMutex
-	replayMutex   sync.Mutex
+	ws                 *websocket.Conn
+	subscriptions      map[string]bool
+	mutex              sync.RWMutex
+	replayMutex        sync.Mutex
+	isStreamingHistory bool
+	lastHistoryEventID int64
 }
 
 var upgrader = websocket.Upgrader{
@@ -43,15 +46,22 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var (
+	clients             = make(map[*ClientConnection]bool)
+	clientsMutex        = sync.RWMutex{}
+	lastStreamedEventID int64
+	streamEventsMutex   = sync.RWMutex{}
+)
+
 func (s *Server) GetEvents(c echo.Context) error {
 	s.logger.Info("GetEvents WebSocket upgrade")
-	
+
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		s.logger.WithError(err).Error("WebSocket upgrade failed")
 		return err
 	}
-	
+
 	s.logger.Info("WebSocket connected")
 	defer func() {
 		ws.Close()
@@ -62,6 +72,16 @@ func (s *Server) GetEvents(c echo.Context) error {
 		ws:            ws,
 		subscriptions: make(map[string]bool),
 	}
+
+	clientsMutex.Lock()
+	clients[client] = true
+	clientsMutex.Unlock()
+
+	defer func() {
+		clientsMutex.Lock()
+		delete(clients, client)
+		clientsMutex.Unlock()
+	}()
 
 	for {
 		var msg WebSocketMessage
@@ -101,12 +121,22 @@ func (s *Server) handleSystemEventsSubscription(client *ClientConnection, req Su
 		client.replayMutex.Lock()
 		defer client.replayMutex.Unlock()
 
+		client.mutex.Lock()
+		client.isStreamingHistory = true
+		client.mutex.Unlock()
+
+		var lastHistoryID int64
+		var lastEventTime time.Time
+
 		if req.LastSeen != nil {
-			lastSeenTime := time.Unix(*req.LastSeen, 0)
+			lastSeenTime := time.UnixMilli(*req.LastSeen)
 			events, err := s.db.GetEventsAfterTimestamp(ctx.Request().Context(), lastSeenTime)
 			if err != nil {
 				s.logger.WithError(err).Error("Failed to get historical events")
 				s.sendError(client.ws, "failed to get historical events")
+				client.mutex.Lock()
+				client.isStreamingHistory = false
+				client.mutex.Unlock()
 				return
 			}
 
@@ -114,7 +144,48 @@ func (s *Server) handleSystemEventsSubscription(client *ClientConnection, req Su
 				eventMsg := s.convertToEventMessage(event)
 				if err := s.sendEvent(client.ws, eventMsg); err != nil {
 					s.logger.WithError(err).Debug("Failed to send historical event")
+					client.mutex.Lock()
+					client.isStreamingHistory = false
+					client.mutex.Unlock()
 					return
+				}
+				lastHistoryID = event.ID
+			}
+
+			if len(events) > 0 {
+				lastEventTime = events[len(events)-1].CreatedAt
+			}
+		}
+
+		client.mutex.Lock()
+		client.isStreamingHistory = false
+		client.lastHistoryEventID = lastHistoryID
+		client.mutex.Unlock()
+
+		if lastHistoryID > 0 {
+			streamEventsMutex.RLock()
+			currentStreamedID := lastStreamedEventID
+			streamEventsMutex.RUnlock()
+
+			if currentStreamedID > lastHistoryID {
+				gapStartTime := lastEventTime.Add(1 * time.Nanosecond)
+				if lastEventTime.IsZero() {
+					gapStartTime = time.Unix(*req.LastSeen, 0)
+				}
+
+				gapEvents, err := s.db.GetEventsAfterTimestamp(ctx.Request().Context(), gapStartTime)
+				if err != nil {
+					s.logger.WithError(err).Error("Failed to get gap events")
+				} else {
+					for _, event := range gapEvents {
+						if event.ID > lastHistoryID && event.ID <= currentStreamedID {
+							eventMsg := s.convertToEventMessage(event)
+							if err := s.sendEvent(client.ws, eventMsg); err != nil {
+								s.logger.WithError(err).Debug("Failed to send gap event")
+								return
+							}
+						}
+					}
 				}
 			}
 		}
@@ -159,4 +230,52 @@ func (s *Server) sendError(ws *websocket.Conn, errorMsg string) {
 		Type: "error",
 		Data: map[string]string{"message": errorMsg},
 	})
+}
+
+func (s *Server) streamNewEvents() {
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	lastSeen := time.Now()
+
+	for range ticker.C {
+		events, err := s.db.GetEventsAfterTimestamp(context.Background(), lastSeen)
+		if err != nil {
+			s.logger.WithError(err).Error("Failed to get new events")
+			continue
+		}
+
+		if len(events) == 0 {
+			continue
+		}
+
+		clientsMutex.RLock()
+		activeClients := make([]*ClientConnection, 0, len(clients))
+		for client := range clients {
+			client.mutex.RLock()
+			if client.subscriptions["system_events"] && !client.isStreamingHistory {
+				activeClients = append(activeClients, client)
+			}
+			client.mutex.RUnlock()
+		}
+		clientsMutex.RUnlock()
+
+		for _, event := range events {
+			eventMsg := s.convertToEventMessage(event)
+
+			for _, client := range activeClients {
+				if err := s.sendEvent(client.ws, eventMsg); err != nil {
+					s.logger.WithError(err).Debug("Failed to send new event to client")
+				}
+			}
+
+			streamEventsMutex.Lock()
+			if event.ID > lastStreamedEventID {
+				lastStreamedEventID = event.ID
+			}
+			streamEventsMutex.Unlock()
+
+			lastSeen = event.CreatedAt.Add(1 * time.Nanosecond)
+		}
+	}
 }
