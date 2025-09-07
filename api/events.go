@@ -236,7 +236,9 @@ func (s *Server) streamNewEvents() {
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
-	lastSeen := time.Now()
+	lastSeen := time.Now().UTC()
+
+	s.logger.Info("Starting event streamer")
 
 	for range ticker.C {
 		events, err := s.db.GetEventsAfterTimestamp(context.Background(), lastSeen)
@@ -246,8 +248,11 @@ func (s *Server) streamNewEvents() {
 		}
 
 		if len(events) == 0 {
+			s.logger.WithField("last_seen", lastSeen).Info("No new events found")
 			continue
 		}
+
+		s.logger.WithField("events", len(events)).Info("Streaming new events")
 
 		clientsMutex.RLock()
 		activeClients := make([]*ClientConnection, 0, len(clients))
@@ -259,6 +264,8 @@ func (s *Server) streamNewEvents() {
 			client.mutex.RUnlock()
 		}
 		clientsMutex.RUnlock()
+
+		s.logger.WithField("active_clients", len(activeClients)).Info("Found active clients")
 
 		for _, event := range events {
 			eventMsg := s.convertToEventMessage(event)
@@ -275,7 +282,7 @@ func (s *Server) streamNewEvents() {
 			}
 			streamEventsMutex.Unlock()
 
-			lastSeen = event.CreatedAt.Add(1 * time.Nanosecond)
+			lastSeen = event.CreatedAt.Add(1 * time.Millisecond)
 		}
 	}
 }
