@@ -12,7 +12,7 @@ import (
 )
 
 const getEventsAfterTimestamp = `-- name: GetEventsAfterTimestamp :many
-SELECT id, public_key, policy_id, event_type, event_data, created_at FROM system_events WHERE created_at >= $1
+SELECT id, public_key, policy_id, event_type, event_data, created_at FROM system_events WHERE created_at >= $1 ORDER BY created_at ASC
 `
 
 func (q *Queries) GetEventsAfterTimestamp(ctx context.Context, createdAt pgtype.Timestamp) ([]SystemEvent, error) {

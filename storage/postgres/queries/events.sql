@@ -8,4 +8,4 @@ INSERT INTO system_events (
 RETURNING id;
 
 -- name: GetEventsAfterTimestamp :many
-SELECT * FROM system_events WHERE created_at >= $1;
+SELECT * FROM system_events WHERE created_at >= $1 ORDER BY created_at ASC;
