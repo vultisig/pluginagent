@@ -99,8 +99,14 @@ func (s *Server) CreatePluginPolicy(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse("failed to create policy"))
 	}
 
+	pluginPolicyWithRecipe, err := types.FromPluginPolicy(*newPolicy)
+	if err != nil {
+		s.logger.WithError(err).Error("Failed to get recipe from plugin policy")
+		return c.JSON(http.StatusInternalServerError, NewErrorResponse("failed to get recipe from plugin policy"))
+	}
+
 	// Record plugin policy creation event
-	jsonPolicy, err := json.Marshal(policy)
+	jsonPolicy, err := json.Marshal(pluginPolicyWithRecipe)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}

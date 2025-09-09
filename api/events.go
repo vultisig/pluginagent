@@ -118,6 +118,10 @@ func (s *Server) handleSystemEventsSubscription(client *ClientConnection, req Su
 	client.mutex.Unlock()
 
 	go func() {
+		s.sendMessage(client.ws, WebSocketMessage{
+			Type: "subscription_confirmed",
+			Data: map[string]string{"channel": "system_events"},
+		})
 		client.replayMutex.Lock()
 		defer client.replayMutex.Unlock()
 
@@ -190,10 +194,6 @@ func (s *Server) handleSystemEventsSubscription(client *ClientConnection, req Su
 			}
 		}
 
-		s.sendMessage(client.ws, WebSocketMessage{
-			Type: "subscription_confirmed",
-			Data: map[string]string{"channel": "system_events"},
-		})
 	}()
 }
 
