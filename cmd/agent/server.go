@@ -10,6 +10,7 @@ import (
 	"github.com/vultisig/pluginagent/config"
 	"github.com/vultisig/pluginagent/storage"
 	"github.com/vultisig/verifier/vault"
+	vgrelay "github.com/vultisig/vultisig-go/relay"
 )
 
 func main() {
@@ -59,6 +60,8 @@ func main() {
 		logger.Fatalf("Failed to connect to database: %v", err)
 	}
 
+	relayClient := vgrelay.NewRelayClient(cfg.VaultService.Relay.Server)
+
 	server := api.NewServer(
 		cfg.Server,
 		cfg.Plugin,
@@ -67,6 +70,8 @@ func main() {
 		vaultStorage,
 		client,
 		inspector,
+		relayClient,
+		cfg.Verifier,
 	)
 
 	if err := server.StartServer(); err != nil {

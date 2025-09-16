@@ -21,10 +21,12 @@ import (
 	"github.com/vultisig/pluginagent/storage/interfaces"
 	"github.com/vultisig/pluginagent/types"
 	vv "github.com/vultisig/verifier/common/vultisig_validator"
+	"github.com/vultisig/verifier/plugin/keysign"
 	"github.com/vultisig/verifier/plugin/tasks"
 	vtypes "github.com/vultisig/verifier/types"
 	"github.com/vultisig/verifier/vault"
 	vgcommon "github.com/vultisig/vultisig-go/common"
+	vgrelay "github.com/vultisig/vultisig-go/relay"
 	vgtypes "github.com/vultisig/vultisig-go/types"
 )
 
@@ -39,6 +41,7 @@ type Server struct {
 	sdClient      *statsd.Client
 	policyService service.Policy
 	logger        *logrus.Logger
+	signer        *keysign.Signer
 }
 
 // NewServer returns a new server.
@@ -50,6 +53,8 @@ func NewServer(
 	vaultStorage vault.Storage,
 	client *asynq.Client,
 	inspector *asynq.Inspector,
+	relayClient *vgrelay.Client,
+	verifierCfg config.VerifierConfig,
 ) *Server {
 	logger := logrus.WithField("service", "plugin").Logger
 
@@ -57,6 +62,19 @@ func NewServer(
 	if err != nil {
 		logger.Fatalf("Failed to initialize policy service: %v", err)
 	}
+
+	signer := keysign.NewSigner(
+		logger.WithField("pkg", "keysign.Signer").Logger,
+		relayClient,
+		[]keysign.Emitter{
+			keysign.NewVerifierEmitter(verifierCfg.URL, verifierCfg.Token),
+			keysign.NewPluginEmitter(client, tasks.TypeKeySignDKLS, tasks.QUEUE_NAME),
+		},
+		[]string{
+			verifierCfg.Prefix,
+			"vultisig-tester-ae1d",
+		},
+	)
 
 	return &Server{
 		cfg:           cfg,
@@ -68,6 +86,7 @@ func NewServer(
 		db:            db,
 		logger:        logger,
 		policyService: policyService,
+		signer:        signer,
 	}
 }
 
@@ -89,6 +108,8 @@ func (s *Server) StartServer() error {
 	e.GET("/ping", s.Ping)
 	e.GET("/events", s.GetEvents)
 	e.GET("/address/derive", s.DeriveAddress)
+
+	e.POST("/propose", s.Propose)
 
 	grp := e.Group("/vault")
 	grp.POST("/reshare", s.ReshareVault)

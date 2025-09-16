@@ -12,6 +12,13 @@ type Config struct {
 	Server       ServerConfig              `mapstructure:"server" json:"server,omitempty"`
 	Database     DatabaseConfig            `mapstructure:"database" json:"database,omitempty"`
 	Plugin       PluginConfig              `mapstructure:"plugin" json:"plugin,omitempty"`
+	Verifier     VerifierConfig            `mapstructure:"verifier" json:"verifier,omitempty"`
+}
+
+type VerifierConfig struct {
+	URL    string `mapstructure:"url" json:"url,omitempty"`
+	Token  string `mapstructure:"token" json:"token,omitempty"`
+	Prefix string `mapstructure:"prefix" json:"prefix,omitempty"`
 }
 
 type PluginConfig struct {

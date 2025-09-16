@@ -1,0 +1,1088 @@
+{
+  "version": 1,
+  "plugin_id": "vultisig-tester-ae1d",
+  "plugin_name": "Vultisig Tester",
+  "plugin_version": 1,
+  "supported_resources": [
+    {
+      "resource_path": {
+        "chain_id": "ethereum",
+        "protocol_id": "angle_merkl_distributor",
+        "function_id": "claim",
+        "full": "ethereum.angle_merkl_distributor.claim"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "users",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "tokens",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "amounts",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "proofs",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "ethereum",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "ethereum.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "ethereum",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "ethereum.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "ethereum",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "ethereum.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "ethereum",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "ethereum.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "arbitrum",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "arbitrum.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "arbitrum",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "arbitrum.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "arbitrum",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "arbitrum.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "arbitrum",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "arbitrum.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "avalanche",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "avalanche.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "avalanche",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "avalanche.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "avalanche",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "avalanche.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "avalanche",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "avalanche.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "bsc",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "bsc.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "bsc",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "bsc.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "bsc",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "bsc.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "bsc",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "bsc.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "base",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "base.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "base",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "base.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "base",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "base.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "base",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "base.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "blast",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "blast.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "blast",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "blast.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "blast",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "blast.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "blast",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "blast.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "optimism",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "optimism.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "optimism",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "optimism.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "optimism",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "optimism.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "optimism",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "optimism.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "polygon",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForTokens",
+        "full": "polygon.uniswapV2_router.swapExactTokensForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "polygon",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactETHForTokens",
+        "full": "polygon.uniswapV2_router.swapExactETHForTokens"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "polygon",
+        "protocol_id": "uniswapV2_router",
+        "function_id": "swapExactTokensForETH",
+        "full": "polygon.uniswapV2_router.swapExactTokensForETH"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "amountIn",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amountOutMin",
+          "supported_types": 5,
+          "required": true
+        },
+        {
+          "parameter_name": "path",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "to",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "deadline",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    },
+    {
+      "resource_path": {
+        "chain_id": "polygon",
+        "protocol_id": "erc20",
+        "function_id": "approve",
+        "full": "polygon.erc20.approve"
+      },
+      "parameter_capabilities": [
+        {
+          "parameter_name": "spender",
+          "supported_types": 1,
+          "required": true
+        },
+        {
+          "parameter_name": "amount",
+          "supported_types": 5,
+          "required": true
+        }
+      ],
+      "required": true,
+      "target": 1
+    }
+  ],
+  "requirements": {
+    "min_vultisig_version": 1,
+    "supported_chains": [
+      "Ethereum",
+      "Arbitrum",
+      "Avalanche",
+      "BSC",
+      "Base",
+      "Blast",
+      "Optimism",
+      "Polygon"
+    ]
+  },
+  "configuration": {
+    "properties": {
+      "telegramUsername": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "telegramUsername"
+    ],
+    "type": "object"
+  }
+}

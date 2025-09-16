@@ -20,6 +20,7 @@ require (
 	github.com/vultisig/commondata v0.0.0-20250710214228-61d9ed8f7778
 	github.com/vultisig/mobile-tss-lib v0.0.0-20250316003201-2e7e570a4a74
 	github.com/vultisig/plugin v0.0.0-20250806113642-60df06aa239f
+	github.com/vultisig/recipes v0.0.0-20250904144043-c1ec16ed3aa2
 	github.com/vultisig/verifier v0.0.0-20250908171933-08a3e648b4a7
 	github.com/vultisig/vultiserver v0.0.0-20250825042420-c6e6ac281110
 	github.com/vultisig/vultisig-go v0.0.0-20250826134334-ddbbadd76c86
@@ -166,7 +167,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/vultisig/go-wrappers v0.0.0-20250716071337-34a5c0f4d6e0 // indirect
-	github.com/vultisig/recipes v0.0.0-20250904144043-c1ec16ed3aa2 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
