@@ -11,6 +11,7 @@ import (
 
 	"github.com/eager7/dogd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/gagliardetto/solana-go"
 	vtypes "github.com/vultisig/verifier/types"
 )
 
@@ -56,11 +57,8 @@ func VerifyPolicySignature(publicKeyHex string, messageHex []byte, signature []b
 }
 
 func IsSolanaAddress(s string) bool {
-	if len(s) < 32 || len(s) > 44 {
-		return false
-	}
-	base58Regex := regexp.MustCompile(`^[1-9A-HJ-NP-Za-km-z]+$`)
-	return base58Regex.MatchString(s)
+	_, err := solana.PublicKeyFromBase58(s)
+	return err == nil
 }
 
 func IsSolanaTransaction(s string) bool {
