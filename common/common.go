@@ -2,13 +2,16 @@ package common
 
 import (
 	"crypto/ecdsa"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"math/big"
+	"regexp"
 	"strings"
 
 	"github.com/eager7/dogd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/gagliardetto/solana-go"
 	vtypes "github.com/vultisig/verifier/types"
 )
 
@@ -51,4 +54,44 @@ func VerifyPolicySignature(publicKeyHex string, messageHex []byte, signature []b
 	S := new(big.Int).SetBytes(signature[32:64])
 
 	return ecdsa.Verify(&ecdsaPubKey, msgHash, R, S), nil
+}
+
+func IsSolanaAddress(s string) bool {
+	_, err := solana.PublicKeyFromBase58(s)
+	return err == nil
+}
+
+func IsSolanaTransaction(s string) bool {
+	s = strings.TrimSpace(s)
+
+	_, err := base64.StdEncoding.DecodeString(s)
+	if err == nil {
+		return len(s) > 0
+	}
+
+	if IsSolanaAddress(s) && len(s) > 100 {
+		return true
+	}
+
+	return false
+}
+
+func IsHexString(s string) bool {
+	hexRegex := regexp.MustCompile(`^[0-9a-fA-F]+$`)
+	return hexRegex.MatchString(s) && len(s)%2 == 0
+}
+
+func ValidateNetworkTransaction(network, txData string) bool {
+	network = strings.ToLower(network)
+
+	switch network {
+	case "solana":
+		return IsSolanaTransaction(txData)
+	case "ethereum":
+		txHex := strings.TrimPrefix(txData, "0x")
+		return IsHexString(txHex)
+	default:
+		txHex := strings.TrimPrefix(txData, "0x")
+		return IsHexString(txHex)
+	}
 }
