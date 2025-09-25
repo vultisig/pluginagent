@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/big"
+	"regexp"
 	"strings"
 
 	"github.com/eager7/dogd/btcec"
@@ -51,4 +52,34 @@ func VerifyPolicySignature(publicKeyHex string, messageHex []byte, signature []b
 	S := new(big.Int).SetBytes(signature[32:64])
 
 	return ecdsa.Verify(&ecdsaPubKey, msgHash, R, S), nil
+}
+
+// IsHexString checks if a string is a valid hex string
+func IsHexString(s string) bool {
+	hexRegex := regexp.MustCompile(`^[0-9a-fA-F]+$`)
+	return hexRegex.MatchString(s) && len(s)%2 == 0
+}
+
+// IsXRPTransaction checks if a string is a valid XRP transaction
+func IsXRPTransaction(txData string) bool {
+	txHex := strings.TrimPrefix(txData, "0x")
+	return IsHexString(txHex) && len(txHex) > 0
+}
+
+// ValidateNetworkTransaction validates transaction data based on network type
+func ValidateNetworkTransaction(network, txData string) bool {
+	network = strings.ToLower(network)
+
+	switch network {
+	// case "solana":
+	// 	return IsSolanaTransaction(txData)
+	case "xrp":
+		return IsXRPTransaction(txData)
+	case "ethereum":
+		txHex := strings.TrimPrefix(txData, "0x")
+		return IsHexString(txHex)
+	default:
+		txHex := strings.TrimPrefix(txData, "0x")
+		return IsHexString(txHex)
+	}
 }
